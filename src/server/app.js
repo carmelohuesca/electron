@@ -8,11 +8,13 @@ const CONFIG = require('./config');
 const CORS = require('./CORS');
 const ROUTER = require('../routes');
 const app = express();
+const passport = require('passport');
+const db = require('./db');
 
 const init = () => {
 
     // CORS headers
-    app.use(CORS.INIT);
+    app.use(CORS);
 
     // PARSER
     app.use(BODY_PARSER.json());
@@ -28,6 +30,10 @@ const init = () => {
 
     // STATIC SERVER
     app.use(express.static('public'));
+
+    //  PASSPORT SETTINGS
+    app.use(passport.initialize());
+    app.use(passport.session());
 
     // ROUTER
     app.use(ROUTER);

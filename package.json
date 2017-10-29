@@ -16,8 +16,10 @@
     "cookie-parser": "1.4.3",
     "debug": "2.6.3",
     "express": "4.15.2",
+    "mongoose": "^4.12.4",
     "morgan": "1.8.1",
     "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "request": "2.83.0",
     "serve-favicon": "2.4.2"
   },
