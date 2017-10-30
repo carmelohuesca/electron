@@ -8,8 +8,11 @@ const CONFIG = require('./config');
 const CORS = require('./CORS');
 const ROUTER = require('../routes');
 const app = express();
+const fs = require('fs');
 const passport = require('passport');
 const db = require('./db');
+const jwt = require('jsonwebtoken');
+const cert = fs.readFileSync('public/cert/server.key');
 
 const init = () => {
 
@@ -30,6 +33,10 @@ const init = () => {
 
     // STATIC SERVER
     app.use(express.static('public'));
+
+    // const token = jwt.sign({ foo: 'bar' }, cert, { algorithm: 'RS256' });
+    // console.log(token);
+    // console.log(jwt.decode(token));
 
     //  PASSPORT SETTINGS
     app.use(passport.initialize());

@@ -13,7 +13,8 @@ class BaseController {
             UPDATED: 202,
             DELETED: 204,
             UNAUTHORIZED: 401,
-            NOT_FOUND: 404
+            NOT_FOUND: 404,
+            SERVER_ERROR: 500
         };
     }
 
