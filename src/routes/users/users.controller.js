@@ -1,46 +1,43 @@
-const model = require('./users.model');
-const Users = model.Users;
-const Posts = model.Posts;
-class UsersController {
+const Model = require('./users.model');
+const BaseController = require('../base.controller');
+const Users = Model.Users;
 
-    static get mock() {
-        const detail = { id: 1, name: 'carmelo' };
-        return {
-            list: [detail, { id: 2, name: 'daniel' }, { id: 3, name: 'raquel' }],
-            read: detail
-        };
-    }
+class UsersController extends BaseController {
 
-    static list(req, res, next) {
-        Users.find(function(err, items) {
-            res.status(200).json(items);
-        });
-        // res.send(UsersController.mock.list);
+    static create(req, res, next) {
+        new Users(req.body).save().then(result => res.status(super.HTTP_STATES.CREATED).send(result));
     }
 
     static read(req, res, next) {
-        const id = req.params.id;
-        if (id && id >= 0 && id < UsersController.mock.list.length) {
-            res.send(UsersController.mock.list[req.params.id]);
-        } else {
-            res.redirect('/404');
-        }
+        Users.findOne({ _id: req.params.id }, (error, item) => {
+            item ? res.status(super.HTTP_STATES.SUCCESS).send(item) : res.status(super.HTTP_STATES.NOT_FOUND).send('item not found');
+        });
     }
 
-    static me(req, res, next) {
-        res.send(UsersController.mock.read);
+    static update(req, res, next) {
+        Users.findOne({ _id: req.params.id }, (error, item) => {
+            item ? Users.update(req.query, req.body, {},
+                () => res.status(super.HTTP_STATES.UPDATED).json(item)) : res.status(super.HTTP_STATES.NOT_FOUND).send('item not found');
+        });
+    }
+
+    static delete(req, res, next) {
+        Users.findOne({ _id: req.params.id }, (error, item) => {
+            item ? item.remove(
+                () => res.status(super.HTTP_STATES.DELETED).send('item deleted')) : res.status(super.HTTP_STATES.NOT_FOUND).send('item not found');
+        });
+    }
+
+    static list(req, res, next) {
+        Users.find((err, items) => res.status(super.HTTP_STATES.SUCCESS).json(items));
     }
 
     static count(req, res, next) {
         res.json({ count: Users.length });
     }
 
-    static create(req, res, next) {
-        const created = new Users({
-            name: req.body.name,
-            email: req.body.email
-        }).save();
-        created.then(result => res.status(201).send(result));
+    static me(req, res, next) {
+        res.send(req.headers);
     }
 
 }
