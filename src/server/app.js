@@ -3,19 +3,19 @@ const BODY_PARSER = require('body-parser');
 const express = require('express');
 const PATH = require('path');
 const MORGAN = require('morgan');
-const FS = require('fs');
 const CONFIG = require('./config');
 const CORS = require('./CORS');
 const ROUTER = require('../routes');
 const app = express();
-const fs = require('fs');
+const FS = require('fs');
 const passport = require('passport');
 const db = require('./db');
 const jwt = require('jsonwebtoken');
-const cert = fs.readFileSync('public/cert/server.key');
+const cert = FS.readFileSync('public/cert/server.key');
+const Log = require('./Log');
+const log = new Log();
 
 const init = () => {
-
     // CORS headers
     app.use(CORS);
 
@@ -34,9 +34,7 @@ const init = () => {
     // STATIC SERVER
     app.use(express.static('public'));
 
-    // const token = jwt.sign({ foo: 'bar' }, cert, { algorithm: 'RS256' });
-    // console.log(token);
-    // console.log(jwt.decode(token));
+    const token = jwt.sign({ foo: 'bar' }, cert, { algorithm: 'RS256' });
 
     //  PASSPORT SETTINGS
     app.use(passport.initialize());
@@ -47,12 +45,13 @@ const init = () => {
 
     // LISTENER
     app.listen(CONFIG.PORT, () => {
-        console.log('================================================================');
-        console.log('ENVIRONMENT INFO');
-        console.log('================================================================');
-        console.log('NODE_ENV: ' + CONFIG.NODE_ENV);
-        console.log('PORT: ' + CONFIG.PORT);
-        console.log('================================================================');
+        log.log('================================================================');
+        log.setColor('WHITE').log('ENVIRONMENT INFO').reset();
+        log.log('================================================================');
+        log.log('NODE_ENV:', Log.COLOR.GREEN, CONFIG.NODE_ENV, Log.COLOR.RESET);
+        log.log('PORT:', Log.COLOR.GREEN, CONFIG.PORT, Log.COLOR.RESET);
+        log.log('================================================================');
+        log.setColor('CYAN').log('Carmelo Huesca Calatayud').reset();
     });
     return app;
 };
