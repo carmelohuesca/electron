@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test', { useMongoClient: true });
-const Log = require('./Log');
+const Log = require('./log');
 const log = new Log();
 db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
